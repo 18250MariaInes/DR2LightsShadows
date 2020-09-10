@@ -14,6 +14,12 @@ from numpy import cos, sin, tan
 
 from obj import Obj
 
+from collections import namedtuple
+
+V2 = namedtuple('Point2', ['x', 'y'])
+V3 = namedtuple('Point3', ['x', 'y', 'z'])
+V4 = namedtuple('Point4', ['x', 'y', 'z','w'])
+
 
 def char(c):
     # 1 byte
@@ -60,6 +66,8 @@ class Raytracer(object):
         self.fov = 60
 
         self.scene = []
+        self.pointLight = None
+        self.ambientLight = None
 
     def glCreateWindow(self, width, height):
         self.width = width
@@ -213,7 +221,7 @@ class Raytracer(object):
                 """print(direction)
                 print(directionp)
                 print("--------------------------------")"""
-
+                intersectV = None
                 material = None
 
                 for obj in self.scene:
@@ -222,9 +230,71 @@ class Raytracer(object):
                         if intersect.distance < self.zbuffer[y][x]:
                             self.zbuffer[y][x] = intersect.distance
                             material = obj.material
+                            intersectV = intersect
                 #cuando hay un material predeterminado
-                if material is not None:
-                    self.glVertex_coord(x, y, material.diffuse)
+                if intersectV is not None:
+                    self.glVertex_coord(x, y,self.pointColor(material, intersectV))
+    
+    def pointColor(self, material, intersect):
+
+        objectColor = np.array([material.diffuse[2] / 255,
+                                material.diffuse[1] / 255,
+                                material.diffuse[0] / 255])
+
+        ambientColor = np.array([0,0,0])
+        diffuseColor = np.array([0,0,0])
+        specColor = np.array([0,0,0])
+
+        shadow_intensity = 0
+
+        if self.ambientLight:
+            ambientColor = np.array([self.ambientLight.strength * self.ambientLight.color[2] / 255,
+                                     self.ambientLight.strength * self.ambientLight.color[1] / 255,
+                                     self.ambientLight.strength * self.ambientLight.color[0] / 255])
+
+        if self.pointLight:
+            # Sacamos la direccion de la luz para este punto
+            light_dir = np.subtract(self.pointLight.position, intersect.point)
+            light_dir = light_dir / np.linalg.norm(light_dir)
+
+            # Calculamos el valor del diffuse color
+            intensity = self.pointLight.intensity * max(0, np.dot(light_dir, intersect.normal))
+            diffuseColor = np.array([intensity * self.pointLight.color[2] / 255,
+                                     intensity * self.pointLight.color[1] / 255,
+                                     intensity * self.pointLight.color[2] / 255])
+
+            # Iluminacion especular
+            view_dir = np.subtract(self.camPosition, intersect.point)
+            view_dir = view_dir / np.linalg.norm(view_dir)
+
+            # R = 2 * (N dot L) * N - L
+            reflect = 2 * np.dot(intersect.normal, light_dir)
+            reflect = np.multiply(reflect, intersect.normal)
+            reflect = np.subtract(reflect, light_dir)
+
+            # spec_intensity: lightIntensity * ( view_dir dot reflect) ** specularidad
+            spec_intensity = self.pointLight.intensity * (max(0, np.dot(view_dir, reflect)) ** material.spec)
+
+            specColor = np.array([spec_intensity * self.pointLight.color[2] / 255,
+                                  spec_intensity * self.pointLight.color[1] / 255,
+                                  spec_intensity * self.pointLight.color[0] / 255])
+
+            for obj in self.scene:
+                if obj is not intersect.sceneObject:
+                    hit = obj.ray_intersect(intersect.point,  light_dir)
+                    if hit is not None and intersect.distance < np.linalg.norm(np.subtract(self.pointLight.position, intersect.point)):
+                        shadow_intensity = 1
+
+        # Formula de iluminacion
+        finalColor = (ambientColor + (1 - shadow_intensity) * (diffuseColor + specColor)) * objectColor
+
+        #Nos aseguramos que no suba el valor de color de 1
+
+        r = min(1,finalColor[0])
+        g = min(1,finalColor[1])
+        b = min(1,finalColor[2])
+
+        return color(r, g, b)
 
                 
 

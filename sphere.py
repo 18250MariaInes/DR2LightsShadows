@@ -15,14 +15,29 @@ WHITE = color(1,1,1)
 
 class Material(object):
     # Un material como visto en Unity que rige como se comportara con la luz. Como los materiales de roca, ladrillo, entre otros
-    def __init__(self, diffuse = WHITE):
+    def __init__(self, diffuse = WHITE, spec = 0):
         # color pero se esparce cuando tiene luz
         self.diffuse = diffuse
+        self.spec = spec
 
 
 class Intersect(object): #función que devuelve la distancia de la intersección
-    def __init__(self, distance):
+    def __init__(self, distance, point, normal, sceneObject):
         self.distance = distance
+        self.point = point
+        self.normal = normal
+        self.sceneObject = sceneObject
+
+class AmbientLight(object):
+    def __init__(self, strength = 0, _color = WHITE):
+        self.strength = strength
+        self.color = _color
+
+class PointLight(object):
+    def __init__(self, position = V3(0,0,0), _color = WHITE, intensity = 1):
+        self.position = position
+        self.intensity = intensity
+        self.color = _color
 
 
 class Sphere(object):
@@ -65,5 +80,12 @@ class Sphere(object):
 
         if t0 < 0: # t0 tiene el valor de t1
             return None
+        hit = np.add(orig, t0 * np.array(dir))
+        norm = np.subtract( hit, self.center )
+        norm = norm / np.linalg.norm(norm)
 
-        return Intersect(distance = t0)
+        return Intersect(distance = t0,
+                         point = hit,
+                         normal = norm,
+                         sceneObject = self)
+
