@@ -80,12 +80,23 @@ class Sphere(object):
 
         if t0 < 0: # t0 tiene el valor de t1
             return None
-        hit = np.add(orig, t0 * np.array(dir))
-        norm = np.subtract( hit, self.center )
-        norm = norm / np.linalg.norm(norm)
+        #hit = np.add(orig, t0 * np.array(dir))
+        """print(orig)
+        print(t0 * np.array(dir))
+        print(hit)
+        print(add(orig, multiN(t0,dir)))"""
+        hitp=add(orig, multiN(t0,dir))
+        #print("-------------------------------------------------------")
+
+        #norm = np.subtract( hit, self.center )
+        norm2=subtract(hitp[0], self.center[0],hitp[1],self.center[1],hitp[2],self.center[2])#funciona
+        #norm = norm / np.linalg.norm(norm)
+        norm2=division(norm2, frobenius(norm2))
+        """print(norm)
+        print(norm2)"""
 
         return Intersect(distance = t0,
-                         point = hit,
-                         normal = norm,
+                         point = hitp,
+                         normal = norm2,
                          sceneObject = self)
 

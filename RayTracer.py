@@ -19,6 +19,7 @@ coal = Material(diffuse = color(0, 0, 0), spec = 128)
 snow = Material(diffuse = color(1, 1, 1), spec = 64)
 carrot=Material(diffuse = color(1, 0.54, 0), spec = 64)
 eyes=Material(diffuse = color(0.90, 0.90, 0.90),spec = 64)
+
 pink_center=Material(diffuse = color(0.976, 0.38, 1))
 pink_bow=Material(diffuse = color(0.984, 0.6, 1), spec = 64)
 
@@ -52,8 +53,8 @@ r.scene.append( Sphere((0.20, 0.57,  -4.55), 0.05, coal) )
 #ojos
 r.scene.append( Sphere((-0.09, 0.9,  -4.5), 0.08, eyes) )
 r.scene.append( Sphere((0.09, 0.9,  -4.5), 0.08, eyes) )
-r.scene.append( Sphere((-0.09, 0.8,  -4), 0.03, coal) )
-r.scene.append( Sphere((0.09, 0.8,  -4), 0.03, coal) )
+r.scene.append( Sphere((-0.09, 0.85,  -4.3), 0.03, coal) )
+r.scene.append( Sphere((0.09, 0.85,  -4.3), 0.03, coal) )
 
 #bow
 """r.scene.append( Sphere((-0.06, 1.005,  -4.1), 0.08, pink_bow) )

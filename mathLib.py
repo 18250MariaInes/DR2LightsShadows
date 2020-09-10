@@ -12,6 +12,13 @@ def subtract( x0, x1, y0, y1, z0, z1):
     res.append(y0-y1)
     res.append(z0-z1)
     return res
+
+def add( v1, v2):
+    res=[]
+    res.append(v1[0]+v2[0])
+    res.append(v1[1]+v2[1])
+    res.append(v1[2]+v2[2])
+    return res
 #Realiza la resta entre 2 listas de 2 entradas
 def subtractTwo(x0, x1, y0, y1):
     res=[]
