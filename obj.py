@@ -2,7 +2,7 @@
 Maria Ines Vasquez Figueroa
 18250
 Gráficas
-DR1 Spheres & Textures
+DR2 Lights & Shadows
 Carga OBJ
 """
 

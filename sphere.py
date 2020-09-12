@@ -2,7 +2,7 @@
 Maria Ines Vasquez Figueroa
 18250
 Gráficas
-DR1 Spheres & Textures
+DR2 Lights & Shadows
 Sphere
 """
 
@@ -34,7 +34,7 @@ class AmbientLight(object):
         self.color = _color
 
 class PointLight(object):
-    def __init__(self, position = V3(0,0,0), _color = WHITE, intensity = 1):
+    def __init__(self, position = (0,0,0), _color = WHITE, intensity = 1):
         self.position = position
         self.intensity = intensity
         self.color = _color

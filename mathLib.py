@@ -2,7 +2,7 @@
 Maria Ines Vasquez Figueroa
 18250
 Gráficas
-DR1 Spheres & Textures
+DR2 Lights & Shadows
 Libreria de operaciones matemáticas
 """
 
@@ -11,6 +11,13 @@ def subtract( x0, x1, y0, y1, z0, z1):
     res.append(x0-x1)
     res.append(y0-y1)
     res.append(z0-z1)
+    return res
+
+def sum(m1, m2):
+    res=[]
+    res.append(m1[0]+m2[0])
+    res.append(m1[1]+m2[1])
+    res.append(m1[2]+m2[2])
     return res
 
 def add( v1, v2):
@@ -98,3 +105,10 @@ def multMaster( v, M): #función para multiplicar desde matrices hasta vectores
             temp.append(s)
         c.append(temp)
     return c
+
+def multColor(v1,v2):
+    res=[]
+    res.append(v1[0]*v2[0])
+    res.append(v1[1]*v2[1])
+    res.append(v1[2]*v2[2])
+    return res
